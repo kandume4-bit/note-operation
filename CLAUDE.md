@@ -83,10 +83,13 @@ note-operation/
 4. Day14が済んでいたら**応用編／季節版**へ切り替える（同じ内容を繰り返さない）。
 5. `articles/sleep/dayNN.md` に保存。
 
-### STEP 5. Threads短文を生成
+### STEP 5. 表紙画像プロンプトを生成
+- `knowledge/cover-image.md` に従い、2記事それぞれに**Midjourneyプロンプトを1本**作る（記事の1メッセージを象徴、文字なし、`--ar 16:9 --style raw`）。
+
+### STEP 6. Threads短文を生成
 - `templates/threads-template.md` に沿って、2記事それぞれの短文＋リンク枠を作る。
 
-### STEP 6. ログに追記
+### STEP 7. ログに追記
 - 投稿後（またはユーザーの指示時）、`logs/published.md` に2記事を追記する。
 - 列: 投稿日 / 種別 / Day / タイトル / キーワード / note URL / Threads済
 
