@@ -1,7 +1,13 @@
-# threads-sync-setup.md — note→Threads 自動同期の構築手順（ノーコード／Make.com）
+# threads-sync-setup.md — note→Threads 自動同期の構築手順（ノーコード／IFTTT）
 
 noteに投稿した記事を、順次Threadsへ自動で同期する仕組みのセットアップ手順。
-ノーコードツール **Make.com** を使う。トークン管理は不要（OAuthはMakeが処理）。
+
+> 【2026-06-17 重要な訂正】当初Make.comで構築しようとしたが、**Makeには公式Threadsモジュールが無い**（HTTP＋Threads APIトークンが必要で、トークン不要というメリットが消える）と判明。
+> → **トークン不要で最短なのは IFTTT**。「RSS Feed → Threads」の専用レシピがあり、ThreadsのOAuth連携だけで動く。本書はIFTTT版を採用する。
+> 代替：Publer（RSS自動投稿＋予約、時間差設定が細かい／RSS機能は有料の場合あり）。
+
+ノーコードツール **IFTTT** を使う。トークン管理は不要（OAuthはIFTTTが処理）。
+RSS URL：`https://note.com/tommykaoleo/rss`
 
 ---
 
@@ -19,17 +25,46 @@ noteに投稿した記事を、順次Threadsへ自動で同期する仕組みの
 
 ---
 
-## 事前準備
+## IFTTT版セットアップ手順（こちらを使う）
 
-1. **Make.com** の無料アカウントを作成（https://www.make.com/）。
+### 事前準備
+1. **IFTTT** の無料アカウントを作成（https://ifttt.com/）。
 2. **Threadsアカウント**を用意（Instagram連携済みのもの）。
-3. Makeで「Threads」接続を作成し、**OAuthでログイン許可（1回だけ）**。
 
-> 注意：Threadsモジュールが見つからない場合は、Make内の「Instagram/Meta」系、または代替ツール（IFTTT/Buffer）を使う。末尾の「代替ツール」参照。
+### 手順
+1. IFTTTで「**Create**（applet作成）」、または直接 https://ifttt.com/connect/feed/threads を開く。
+2. **If This = RSS Feed**：トリガー「**New feed item**」を選び、Feed URL に
+   `https://note.com/tommykaoleo/rss` を入力。
+3. **Then That = Threads**：アクション「**Post to Threads**（投稿）」を選び、**ThreadsアカウントをOAuth連携**（1回だけ許可）。
+4. **投稿本文（テキスト）**のテンプレ（IFTTTの材料 `{{EntryTitle}}` `{{EntryUrl}}` を使う）：
+
+```
+{{EntryTitle}}
+
+続きはnoteで
+{{EntryUrl}}
+
+#note #投資 #睡眠の質
+```
+
+5. 保存（Finish）して applet を **ON**。
+6. **プレビューカード**は本文にURL（`{{EntryUrl}}`）が入っていれば自動生成。
+
+### 注意・運用
+- IFTTTのRSSトリガーは**新着のみ**発火するので、過去記事の一斉投稿は起きにくい（Makeのような開始位置選択は不要）。最初は1本投稿してテスト確認するのが安全。
+- **時間差**：IFTTT無料版はRSSのチェック間隔が概ね1時間ごと。これが自然なラグになる。厳密な遅延が欲しければPubler等の予約投稿ツールを検討。
+- **ハッシュタグのジャンル出し分け**：IFTTT無料版は条件分岐が弱い。まずは株式・快眠共通のタグで運用し、こだわるならPublerやIFTTT Pro（フィルター機能）へ。
 
 ---
 
-## シナリオの作り方（基本形：まずこれで動かす）
+## （旧・参考）Make.com版 ※Threadsネイティブ非対応のため非推奨
+
+> Makeには公式Threadsモジュールが無いため、この方式はHTTP＋Threads APIトークンが必要。トークンを用意できる場合のみ。RSSトリガー部分の設定は参考になる。
+
+### モジュール1：RSS「Watch RSS feed items」（トリガー）
+- **URL**：`https://note.com/tommykaoleo/rss`
+- **Maximum number of returned results**：`1`〜`3`
+- **重要**：初回有効化時に「どこから処理を始めるか」を聞かれたら、**必ず「最新（今この時点）から」を選ぶ**。
 
 ### モジュール1：RSS「Watch RSS feed items」（トリガー）
 - **URL**：`https://note.com/tommykaoleo/rss`
