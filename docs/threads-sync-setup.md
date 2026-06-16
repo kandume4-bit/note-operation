@@ -2,12 +2,44 @@
 
 noteに投稿した記事を、順次Threadsへ自動で同期する仕組みのセットアップ手順。
 
-> 【2026-06-17 重要な訂正】当初Make.comで構築しようとしたが、**Makeには公式Threadsモジュールが無い**（HTTP＋Threads APIトークンが必要で、トークン不要というメリットが消える）と判明。
-> → **トークン不要で最短なのは IFTTT**。「RSS Feed → Threads」の専用レシピがあり、ThreadsのOAuth連携だけで動く。本書はIFTTT版を採用する。
-> 代替：Publer（RSS自動投稿＋予約、時間差設定が細かい／RSS機能は有料の場合あり）。
+> 【2026-06-17 最終方式：GitHub Actions（無料・完全自動）】
+> Make＝公式Threads非対応、IFTTT＝RSSトリガーが有料(Pro)、と判明。無料のノーコード完結は不可。
+> → **既存のGitHubリポジトリ＋GitHub Actions**でRSSを定期チェックしThreads APIで自動投稿する方式に決定。費用ゼロ・完全自動。Threads APIトークンの一度きりの取得だけが必要。
 
-ノーコードツール **IFTTT** を使う。トークン管理は不要（OAuthはIFTTTが処理）。
+構成：
+- `scripts/threads_sync.py`：note RSS新着 → Threads APIで投稿。`logs/threads-synced.json` で重複防止。初回は既存を済み扱いにして暴発を防ぐ。
+- `.github/workflows/threads-sync.yml`：毎時実行（cron `10 * * * *`）＋手動実行。状態ファイルをコミット。
+- GitHub Secrets：`THREADS_ACCESS_TOKEN` と `THREADS_USER_ID`。
+- プレビューカード：本文にnote URLを入れるのでThreads側で自動生成。
+- 時間差：毎時チェックなので新着は1時間以内に同期。
+
 RSS URL：`https://note.com/tommykaoleo/rss`
+
+---
+
+## Threads APIトークンの取得（一度だけ）
+
+1. https://developers.facebook.com/ にログイン（Threadsアカウントと連携しているFacebook/Instagramアカウントで）。
+2. 「マイアプリ」→「アプリを作成」。ユースケースで **Threads** を選ぶ。
+3. アプリに **Threads API** を追加し、自分のThreadsアカウントを接続（テスター/本人として認可）。
+4. Threads API設定画面で **アクセストークンを生成**（自分のアカウント用。スコープに `threads_basic` と `threads_content_publish` を含める）。
+5. 取得した短期トークンを**長期トークン（約60日有効）**に交換：
+   `GET https://graph.threads.net/access_token?grant_type=th_exchange_token&client_secret=（アプリのシークレット）&access_token=（短期トークン）`
+6. **ユーザーID**を取得：
+   `GET https://graph.threads.net/v1.0/me?fields=id&access_token=（長期トークン）` の `id` を控える。
+
+### GitHub Secretsに登録
+リポジトリ（kandume4-bit/note-operation）→ Settings → Secrets and variables → Actions → New repository secret:
+- `THREADS_ACCESS_TOKEN` = 長期トークン
+- `THREADS_USER_ID` = 上記のid
+
+### 動作確認
+- リポジトリの Actions タブ →「note to Threads sync」→「Run workflow」で手動実行。
+- 初回は既存記事を済み扱いにするだけ（投稿されない）。2回目以降、noteに新規投稿すると毎時のチェックでThreadsへ自動投稿される。
+- テストしたい場合は、初回実行後に新しいnote記事を1本投稿し、次の毎時実行（または手動実行）で1件だけ投稿されるか確認。
+
+### 注意：トークンの更新（約60日ごと）
+長期トークンは約60日で失効する。失効前に再取得してSecretを更新するか、将来オプションで自動更新（refresh）ステップを追加する（要相談）。失効すると投稿が止まるだけで、noteやリポジトリには影響しない。
 
 ---
 
