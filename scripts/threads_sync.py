@@ -59,7 +59,9 @@ def save_state(state):
 
 
 def hashtags(title):
-    # タイトルに "Day" を含めば快眠連載、それ以外は株式とみなす
+    # タイトルで連載ジャンルを判定してハッシュタグを出し分ける
+    if "糖尿病" in title or "インスリン" in title:
+        return "#1型糖尿病 #糖尿病 #エッセイ #闘病記"
     if "Day" in title:
         return "#睡眠の質 #快眠 #働く世代"
     return "#新NISA #投資初心者 #日経平均"
