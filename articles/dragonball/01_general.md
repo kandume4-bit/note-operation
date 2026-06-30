@@ -23,9 +23,9 @@
 7. なぜ強い上司は“悟空型”を卒業するのか｜DBに学ぶマネジメント
    ｜型：連載宣言×ギャップ／目を引く理由：連載の器を明示しつつ「卒業」の意外性／採点 クリック7 具体6 検索SNS8 信頼8 ＝29/40
 
-▶ 採用：1番「悟空は“いい上司”なのか？──40代で読み返すドラゴンボール」（合計33/40で最高）
-  選んだ理由：ユーザー指定軸「ギャップ×意外な主語」に最も忠実で、「悟空×上司」という誰も並べない主語の意外性がある。さらに実データで最も強い“問いかけ型”を同居させており「開かせる力」が高い。連載の器（DB×マネジメント）も一語で伝わる。
-  別案メモ（次点上位3）：2番（自白×名指しで共感が強い・回によって再利用可）／6番（6面カルテを主役にする総論と相性が良い・サブタイトル候補）／7番（連載宣言として安定）。
+▶ 採用（2026-06-29 改定）：「悟空って“いい上司”だと思っていませんか？ 強さと管理職は、別物でした」
+  ★ユーザー指示で連載のタイトル軸を「問いかけ型『〜と思っていませんか？ 実は…』」に変更。読者の思い込み（強い人＝いい上司）を名指しで突き、意外な答え（別物でした）で続きを読ませる。実データでビュー最多の勝ち型。
+  旧採用（参考）：「悟空は“いい上司”なのか？──40代で読み返すドラゴンボール」（ギャップ×意外な主語・インパクト不足で差し替え）。
 
 ---
 
@@ -89,7 +89,7 @@
 <p>▼以下メモ（noteに貼らない）</p>
 
 <p>【note記事タイトル（タイトル欄に入れる）】</p>
-<p>悟空は“いい上司”なのか？──40代で読み返すドラゴンボール</p>
+<p>悟空って“いい上司”だと思っていませんか？ 強さと管理職は、別物でした</p>
 
 <p>【表紙Midjourneyプロンプト（キャラは描かない・象徴イメージ・文字なし）】</p>
 <p>A symbolic conceptual cover, no characters, no text. A single worn medical clipboard chart on a dark desk, six empty checkboxes glowing faint orange, beside it four star-shaped orange crystal spheres catching warm light, cinematic chiaroscuro, shallow depth of field, moody office at night, sense of evaluation and leadership, premium editorial illustration, no anime characters --ar 16:9 --style raw</p>
